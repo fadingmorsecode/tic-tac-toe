@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow&display=swap');
+
 /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
    License: none (public domain)
@@ -126,4 +128,79 @@ q:after {
 table {
   border-collapse: collapse;
   border-spacing: 0;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  background-color: #b96ac9;
+  height: 6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 8px 5px grey;
+  z-index: 1;
+}
+
+.header-text {
+  color: #ffd2fc;
+  font-size: 3rem;
+  font-weight: bold;
+  font-family: 'Barlow', sans-serif;
+}
+
+.main {
+  background-color: #ddfff7;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gameboard {
+  height: 500px;
+  width: 500px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+}
+
+#cell-1,
+#cell-2,
+#cell-4,
+#cell-5,
+#cell-7,
+#cell-8 {
+  border-right: solid black 4px;
+}
+
+#cell-2,
+#cell-3,
+#cell-5,
+#cell-6,
+#cell-8,
+#cell-9 {
+  border-left: solid black 4px;
+}
+
+#cell-1,
+#cell-2,
+#cell-3,
+#cell-4,
+#cell-5,
+#cell-6 {
+  border-bottom: solid black 4px;
+}
+
+#cell-4,
+#cell-5,
+#cell-6,
+#cell-7,
+#cell-8,
+#cell-9 {
+  border-top: solid black 4px;
 }
