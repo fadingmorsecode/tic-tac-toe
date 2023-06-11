@@ -204,3 +204,13 @@ body {
 #cell-8 {
   border-top: solid black 4px;
 }
+
+.cells {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 1.5rem;
+  font-size: 8rem;
+  font-weight: bold;
+  font-family: 'Barlow', sans-serif;
+}
