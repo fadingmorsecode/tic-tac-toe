@@ -5,11 +5,22 @@ const gameBoard = (() => {
   return { obj };
 })();
 
-const Player = (symbol) => {
-  return { symbol };
-};
+const Player = (name, symbol) => ({ name, symbol });
 
-const gameFlow = (() => {})();
+const gameFlow = (() => {
+  const playerOne = Player('Player One', 'x');
+  const playerTwo = Player('Player Two', 'o');
+
+  const randomNum = Math.floor(Math.random() * 100);
+
+  let activePlayer = '';
+
+  if (randomNum <= 49) {
+    activePlayer = playerOne.name;
+  } else {
+    activePlayer = playerTwo.name;
+  }
+})();
 
 const renderBoard = (() => {
   const renderFunc = () => {
