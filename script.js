@@ -14,13 +14,7 @@ const renderBoard = (() => {
   return { renderFunc };
 })();
 
-const Player = (name, symbol) => {
-  const playerMoves = [];
-  const playerMove = (index) => {
-    playerMoves.splice(index, 0, index);
-  };
-  return { name, symbol, playerMoves, playerMove };
-};
+const Player = (name, symbol) => ({ name, symbol });
 
 const gameFlow = (() => {
   const playerOne = Player('Player One', 'x');
@@ -38,15 +32,10 @@ const gameFlow = (() => {
   const placeMark = (index) => {
     if (gameBoard.obj[index] === '') {
       gameBoard.obj.splice(index, 1, `${activePlayer.symbol}`);
-      activePlayer.playerMove(index);
-      console.log(
-        `${activePlayer.name}'s array is ${activePlayer.playerMoves}`
-      );
 
       switch (activePlayer) {
         case playerOne:
           activePlayer = playerTwo;
-
           break;
         case playerTwo:
           activePlayer = playerOne;
@@ -64,17 +53,3 @@ const gameFlow = (() => {
     });
   });
 })();
-
-winConditions = [
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8],
-  [0, 3, 6],
-  [1, 4, 7],
-  [2, 5, 8],
-  [0, 4, 8],
-  [2, 4, 6],
-];
-
-playerOneMarks = [];
-playerTwoMarks = [];
