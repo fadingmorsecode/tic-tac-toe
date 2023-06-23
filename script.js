@@ -8,6 +8,11 @@ const renderBoard = (() => {
   const renderFunc = () => {
     gameBoard.obj.forEach((mark, index) => {
       displayArray[index].textContent = mark;
+      if (mark === 'x') {
+        displayArray[index].classList.add('playerOne');
+      } else if (mark === 'o') {
+        displayArray[index].classList.add('playerTwo');
+      }
     });
   };
   return { displayArray, renderFunc };
