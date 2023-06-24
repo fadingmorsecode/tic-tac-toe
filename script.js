@@ -3,6 +3,31 @@ const gameBoard = (() => {
   return { obj };
 })();
 
+const modalController = (() => {
+  const modal = document.querySelector('.modal');
+  const playBtn = document.querySelector('.play-btn');
+  const playerOneInput = document.querySelector('#playerOneInput');
+  const playerTwoInput = document.querySelector('#playerTwoInput');
+
+  const getInputValues = () => [playerOneInput.value, playerTwoInput.value];
+
+  const hideModal = () => {
+    modal.style.display = 'none';
+  };
+
+  const showModal = () => {
+    modal.style.display = 'flex';
+  };
+  return {
+    hideModal,
+    showModal,
+    playBtn,
+    playerOneInput,
+    playerTwoInput,
+    getInputValues,
+  };
+})();
+
 const renderBoard = (() => {
   const displayArray = document.querySelectorAll('.cells');
   const renderFunc = () => {
