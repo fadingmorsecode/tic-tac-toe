@@ -52,8 +52,8 @@ const Player = (name, symbol) => {
 };
 
 const gameFlow = (() => {
-  const playerOne = Player('Player One', 'x');
-  const playerTwo = Player('Player Two', 'o');
+  const playerOne = Player('', 'x');
+  const playerTwo = Player('', 'o');
   const randomNum = Math.floor(Math.random() * 100);
   const winConditions = [
     [0, 1, 2],
@@ -82,7 +82,7 @@ const gameFlow = (() => {
         true
       ) {
         winner = playerOne;
-        console.log('player one wins');
+        console.log(`${playerOne.name} wins`);
       }
 
       if (
@@ -90,7 +90,7 @@ const gameFlow = (() => {
         true
       ) {
         winner = playerTwo;
-        console.log('player two wins');
+        console.log(`${playerTwo.name} wins`);
       }
     });
     if (gameBoard.obj.every((mark) => mark !== '') && winner === '') {
@@ -124,4 +124,12 @@ const gameFlow = (() => {
       placeMark(index);
     });
   });
+
+  modalController.playBtn.onclick = () => {
+    const inputValues = modalController.getInputValues();
+    modalController.hideModal();
+    const [a, b] = inputValues;
+    playerOne.name = a;
+    playerTwo.name = b;
+  };
 })();
