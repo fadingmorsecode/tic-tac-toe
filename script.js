@@ -127,9 +127,14 @@ const gameFlow = (() => {
 
   modalController.playBtn.onclick = () => {
     const inputValues = modalController.getInputValues();
-    modalController.hideModal();
     const [a, b] = inputValues;
-    playerOne.name = a;
-    playerTwo.name = b;
+    if (!a || !b) {
+      modalController.playerOneInput.style.borderColor = 'red';
+      modalController.playerTwoInput.style.borderColor = 'red';
+    } else {
+      modalController.hideModal();
+      playerOne.name = a;
+      playerTwo.name = b;
+    }
   };
 })();
