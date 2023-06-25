@@ -3,6 +3,29 @@ const gameBoard = (() => {
   return { obj };
 })();
 
+const Player = (name, symbol) => {
+  const playerMoves = [];
+  const playerMove = (index) => {
+    playerMoves.splice(index, 0, index);
+  };
+  return { name, symbol, playerMoves, playerMove };
+};
+
+const renderBoard = (() => {
+  const displayArray = document.querySelectorAll('.cells');
+  const renderFunc = () => {
+    gameBoard.obj.forEach((mark, index) => {
+      displayArray[index].textContent = mark;
+      if (mark === 'x') {
+        displayArray[index].classList.add('playerOne');
+      } else if (mark === 'o') {
+        displayArray[index].classList.add('playerTwo');
+      }
+    });
+  };
+  return { displayArray, renderFunc };
+})();
+
 const modalController = (() => {
   const modal = document.querySelector('#start-modal');
   const playBtn = document.querySelector('.play-btn');
@@ -51,41 +74,13 @@ const newGameController = (() => {
       winAnnouncement.textContent = `${result} won that round!`;
     }
   };
-
-  newGameBtn.onclick = () => {
-    hideNewGameModal();
-  };
-
-  return { newGame, hideNewGameModal };
+  return { newGame, hideNewGameModal, newGameBtn };
 })();
-
-const renderBoard = (() => {
-  const displayArray = document.querySelectorAll('.cells');
-  const renderFunc = () => {
-    gameBoard.obj.forEach((mark, index) => {
-      displayArray[index].textContent = mark;
-      if (mark === 'x') {
-        displayArray[index].classList.add('playerOne');
-      } else if (mark === 'o') {
-        displayArray[index].classList.add('playerTwo');
-      }
-    });
-  };
-  return { displayArray, renderFunc };
-})();
-
-const Player = (name, symbol) => {
-  const playerMoves = [];
-  const playerMove = (index) => {
-    playerMoves.splice(index, 0, index);
-  };
-  return { name, symbol, playerMoves, playerMove };
-};
 
 const gameFlow = (() => {
-  const headerText = document.querySelector('.header-text');
   const playerOne = Player('', 'x');
   const playerTwo = Player('', 'o');
+  const headerText = document.querySelector('.header-text');
   const randomNum = Math.floor(Math.random() * 100);
   const winConditions = [
     [0, 1, 2],
@@ -115,7 +110,6 @@ const gameFlow = (() => {
       ) {
         winner = playerOne;
         headerText.textContent = 'Tic Tac Toe';
-        console.log(`${playerOne.name} wins`);
         newGameController.newGame(playerOne.name);
       }
 
@@ -125,13 +119,11 @@ const gameFlow = (() => {
       ) {
         winner = playerTwo;
         headerText.textContent = 'Tic Tac Toe';
-        console.log(`${playerTwo.name} wins`);
         newGameController.newGame(playerTwo.name);
       }
     });
     if (gameBoard.obj.every((mark) => mark !== '') && winner === '') {
       headerText.textContent = 'Tic Tac Toe';
-      console.log('you tied');
       newGameController.newGame('tie');
     }
   };
@@ -180,5 +172,25 @@ const gameFlow = (() => {
       playerTwo.name = b;
       headerText.textContent = `${activePlayer.name}'s turn`;
     }
+  };
+
+  newGameController.newGameBtn.onclick = () => {
+    newGameController.hideNewGameModal();
+    for (let i = 0; i < gameBoard.obj.length; i++) {
+      gameBoard.obj.splice(i, 1, '');
+      renderBoard.displayArray[i].classList.remove('playerOne');
+      renderBoard.displayArray[i].classList.remove('playerTwo');
+    }
+    renderBoard.renderFunc();
+    winner = '';
+    const newRandomNum = Math.floor(Math.random() * 100);
+    if (newRandomNum <= 49) {
+      activePlayer = playerOne;
+    } else {
+      activePlayer = playerTwo;
+    }
+    playerOne.playerMoves.splice(0, playerOne.playerMoves.length);
+    playerTwo.playerMoves.splice(0, playerTwo.playerMoves.length);
+    modalController.showModal();
   };
 })();
