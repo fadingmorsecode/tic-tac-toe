@@ -52,6 +52,7 @@ const Player = (name, symbol) => {
 };
 
 const gameFlow = (() => {
+  const headerText = document.querySelector('.header-text');
   const playerOne = Player('', 'x');
   const playerTwo = Player('', 'o');
   const randomNum = Math.floor(Math.random() * 100);
@@ -82,6 +83,7 @@ const gameFlow = (() => {
         true
       ) {
         winner = playerOne;
+        headerText.textContent = 'Tic Tac Toe';
         console.log(`${playerOne.name} wins`);
       }
 
@@ -90,10 +92,12 @@ const gameFlow = (() => {
         true
       ) {
         winner = playerTwo;
+        headerText.textContent = 'Tic Tac Toe';
         console.log(`${playerTwo.name} wins`);
       }
     });
     if (gameBoard.obj.every((mark) => mark !== '') && winner === '') {
+      headerText.textContent = 'Tic Tac Toe';
       console.log('you tied');
     }
   };
@@ -102,18 +106,20 @@ const gameFlow = (() => {
     if (gameBoard.obj[index] === '' && winner === '') {
       gameBoard.obj.splice(index, 1, `${activePlayer.symbol}`);
       activePlayer.playerMove(index);
-      checkWin();
 
       switch (activePlayer) {
         case playerOne:
           activePlayer = playerTwo;
-
+          headerText.textContent = `${activePlayer.name}'s turn`;
           break;
         case playerTwo:
           activePlayer = playerOne;
+          headerText.textContent = `${activePlayer.name}'s turn`;
           break;
         default:
       }
+
+      checkWin();
 
       renderBoard.renderFunc();
     }
@@ -123,18 +129,22 @@ const gameFlow = (() => {
     cell.addEventListener('click', () => {
       placeMark(index);
     });
+    return { headerText };
   });
 
   modalController.playBtn.onclick = () => {
     const inputValues = modalController.getInputValues();
     const [a, b] = inputValues;
-    if (!a || !b) {
+    if (!a) {
       modalController.playerOneInput.style.borderColor = 'red';
+    }
+    if (!b) {
       modalController.playerTwoInput.style.borderColor = 'red';
     } else {
       modalController.hideModal();
       playerOne.name = a;
       playerTwo.name = b;
+      headerText.textContent = `${activePlayer.name}'s turn`;
     }
   };
 })();

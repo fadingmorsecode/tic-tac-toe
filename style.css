@@ -140,6 +140,8 @@ body {
   background-color: #b96ac9;
   height: 6rem;
   display: flex;
+  flex-direction: column;
+  gap: 15px;
   align-items: center;
   justify-content: center;
   box-shadow: 0px 8px 5px grey;
