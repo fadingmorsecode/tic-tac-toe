@@ -4,7 +4,7 @@ const gameBoard = (() => {
 })();
 
 const modalController = (() => {
-  const modal = document.querySelector('.modal');
+  const modal = document.querySelector('#start-modal');
   const playBtn = document.querySelector('.play-btn');
   const playerOneInput = document.querySelector('#playerOneInput');
   const playerTwoInput = document.querySelector('#playerTwoInput');
@@ -18,6 +18,7 @@ const modalController = (() => {
   const showModal = () => {
     modal.style.display = 'flex';
   };
+
   return {
     hideModal,
     showModal,
@@ -26,6 +27,36 @@ const modalController = (() => {
     playerTwoInput,
     getInputValues,
   };
+})();
+
+const newGameController = (() => {
+  const newGameModal = document.querySelector('#new-game-modal');
+  const winAnnouncement = document.querySelector('.win-announcement');
+  const newGameBtn = document.querySelector('.new-game-btn');
+
+  const hideNewGameModal = () => {
+    newGameModal.style.display = 'none';
+  };
+
+  const showNewGameModal = () => {
+    newGameModal.style.display = 'flex';
+  };
+
+  const newGame = (result) => {
+    if (result === 'tie') {
+      showNewGameModal();
+      winAnnouncement.textContent = 'Oops! You tied';
+    } else {
+      showNewGameModal();
+      winAnnouncement.textContent = `${result} won that round!`;
+    }
+  };
+
+  newGameBtn.onclick = () => {
+    hideNewGameModal();
+  };
+
+  return { newGame, hideNewGameModal };
 })();
 
 const renderBoard = (() => {
@@ -85,6 +116,7 @@ const gameFlow = (() => {
         winner = playerOne;
         headerText.textContent = 'Tic Tac Toe';
         console.log(`${playerOne.name} wins`);
+        newGameController.newGame(playerOne.name);
       }
 
       if (
@@ -94,11 +126,13 @@ const gameFlow = (() => {
         winner = playerTwo;
         headerText.textContent = 'Tic Tac Toe';
         console.log(`${playerTwo.name} wins`);
+        newGameController.newGame(playerTwo.name);
       }
     });
     if (gameBoard.obj.every((mark) => mark !== '') && winner === '') {
       headerText.textContent = 'Tic Tac Toe';
       console.log('you tied');
+      newGameController.newGame('tie');
     }
   };
 
