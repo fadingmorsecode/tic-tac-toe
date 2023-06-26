@@ -290,7 +290,7 @@ input[type='text'] {
   }
 }
 
-label {
+.player-labels {
   font-family: 'Barlow', sans-serif;
   font-size: 1.7rem;
   font-weight: bold;
@@ -362,4 +362,29 @@ form {
   color: white;
   font-family: 'Barlow', sans-serif;
   padding: 10px;
+}
+
+.btns {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+#comp-label {
+  font-family: 'Barlow', sans-serif;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.comp-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#comp {
+  height: 20px;
+  width: 20px;
 }
