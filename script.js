@@ -81,7 +81,7 @@ const gameFlow = (() => {
   const playerOne = Player('', 'x');
   const playerTwo = Player('', 'o');
   const headerText = document.querySelector('.header-text');
-  const randomNum = Math.floor(Math.random() * 100);
+  const randomNum = () => Math.floor(Math.random() * 100);
   const winConditions = [
     [0, 1, 2],
     [3, 4, 5],
@@ -96,7 +96,7 @@ const gameFlow = (() => {
   let activePlayer = '';
   let winner = '';
 
-  if (randomNum <= 49) {
+  if (randomNum() <= 49) {
     activePlayer = playerOne;
   } else {
     activePlayer = playerTwo;
@@ -183,8 +183,7 @@ const gameFlow = (() => {
     }
     renderBoard.renderFunc();
     winner = '';
-    const newRandomNum = Math.floor(Math.random() * 100);
-    if (newRandomNum <= 49) {
+    if (randomNum() <= 49) {
       activePlayer = playerOne;
     } else {
       activePlayer = playerTwo;
