@@ -81,7 +81,6 @@ const gameFlow = (() => {
   const playerOne = Player('', 'x');
   const playerTwo = Player('', 'o');
   const headerText = document.querySelector('.header-text');
-  const randomNum = () => Math.floor(Math.random() * 100);
   const winConditions = [
     [0, 1, 2],
     [3, 4, 5],
@@ -96,11 +95,14 @@ const gameFlow = (() => {
   let activePlayer = '';
   let winner = '';
 
-  if (randomNum() <= 49) {
-    activePlayer = playerOne;
-  } else {
-    activePlayer = playerTwo;
-  }
+  const chooseActive = () => {
+    if (Math.floor(Math.random() * 100) <= 50) {
+      activePlayer = playerOne;
+    } else {
+      activePlayer = playerTwo;
+    }
+  };
+  chooseActive();
 
   const checkWin = () => {
     winConditions.forEach((condition) => {
@@ -183,11 +185,7 @@ const gameFlow = (() => {
     }
     renderBoard.renderFunc();
     winner = '';
-    if (randomNum() <= 49) {
-      activePlayer = playerOne;
-    } else {
-      activePlayer = playerTwo;
-    }
+    chooseActive();
     playerOne.playerMoves.splice(0, playerOne.playerMoves.length);
     playerTwo.playerMoves.splice(0, playerTwo.playerMoves.length);
     modalController.showModal();
