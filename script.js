@@ -1,3 +1,5 @@
+const headerText = document.querySelector('.header-text');
+
 const gameBoard = (() => {
   const obj = ['', '', '', '', '', '', '', '', ''];
   return { obj };
@@ -10,6 +12,10 @@ const Player = (name, symbol) => {
   };
   return { name, symbol, playerMoves, playerMove };
 };
+
+const playerOne = Player('', 'x');
+const playerTwo = Player('', 'o');
+let activePlayer = '';
 
 const renderBoard = (() => {
   const displayArray = document.querySelectorAll('.cells');
@@ -31,6 +37,7 @@ const modalController = (() => {
   const playBtn = document.querySelector('.play-btn');
   const playerOneInput = document.querySelector('#playerOneInput');
   const playerTwoInput = document.querySelector('#playerTwoInput');
+  const playerTwoLabel = document.querySelector('#player-two-label');
 
   const getInputValues = () => [playerOneInput.value, playerTwoInput.value];
 
@@ -49,7 +56,23 @@ const modalController = (() => {
     playerOneInput,
     playerTwoInput,
     getInputValues,
+    playerTwoLabel,
   };
+})();
+
+const checkboxController = (() => {
+  const checkbox = document.querySelector('.comp-btn');
+
+  checkbox.addEventListener('change', () => {
+    if (checkbox.checked) {
+      modalController.playerTwoLabel.textContent = 'Computer';
+      modalController.playerTwoInput.style.visibility = 'hidden';
+    } else {
+      modalController.playerTwoLabel.textContent = 'Player Two Name';
+      modalController.playerTwoInput.style.visibility = 'visible';
+    }
+  });
+  return { checkbox };
 })();
 
 const newGameController = (() => {
@@ -77,10 +100,8 @@ const newGameController = (() => {
   return { newGame, hideNewGameModal, newGameBtn };
 })();
 
-const gameFlow = (() => {
-  const playerOne = Player('', 'x');
-  const playerTwo = Player('', 'o');
-  const headerText = document.querySelector('.header-text');
+const checkWinner = (() => {
+  let winner = '';
   const winConditions = [
     [0, 1, 2],
     [3, 4, 5],
@@ -91,18 +112,6 @@ const gameFlow = (() => {
     [0, 4, 8],
     [2, 4, 6],
   ];
-
-  let activePlayer = '';
-  let winner = '';
-
-  const chooseActive = () => {
-    if (Math.floor(Math.random() * 100) <= 50) {
-      activePlayer = playerOne;
-    } else {
-      activePlayer = playerTwo;
-    }
-  };
-  chooseActive();
 
   const checkWin = () => {
     winConditions.forEach((condition) => {
@@ -125,31 +134,80 @@ const gameFlow = (() => {
       }
     });
     if (gameBoard.obj.every((mark) => mark !== '') && winner === '') {
+      winner = 'tie';
       headerText.textContent = 'Tic Tac Toe';
       newGameController.newGame('tie');
     }
   };
 
+  const switchActive = () => {
+    switch (activePlayer) {
+      case playerOne:
+        activePlayer = playerTwo;
+        headerText.textContent = `${activePlayer.name}'s turn`;
+        break;
+      case playerTwo:
+        activePlayer = playerOne;
+        headerText.textContent = `${activePlayer.name}'s turn`;
+        break;
+      default:
+    }
+  };
+
+  const resetWinner = () => {
+    winner = '';
+  };
+
+  return { checkWin, resetWinner, switchActive, winner };
+})();
+
+const computerController = (() => {
+  const randomMoveGen = () => Math.floor(Math.random() * 9);
+
+  const compMove = () => {
+    let complete = '';
+    while (
+      complete !== 'complete' &&
+      gameBoard.obj.some((mark) => mark === '')
+    ) {
+      const gen = randomMoveGen();
+      if (gameBoard.obj[gen] === '') {
+        complete = 'complete';
+        gameBoard.obj.splice(gen, 1, 'o');
+        activePlayer.playerMove(gen);
+        checkWinner.switchActive();
+        renderBoard.renderFunc();
+        checkWinner.checkWin();
+      }
+    }
+  };
+  return { compMove };
+})();
+
+const gameFlow = (() => {
+  const chooseActive = () => {
+    if (Math.floor(Math.random() * 100) <= 50) {
+      activePlayer = playerOne;
+    } else {
+      activePlayer = playerTwo;
+    }
+  };
+  chooseActive();
+
   const placeMark = (index) => {
-    if (gameBoard.obj[index] === '' && winner === '') {
+    if (gameBoard.obj[index] === '' && checkWinner.winner === '') {
       gameBoard.obj.splice(index, 1, `${activePlayer.symbol}`);
       activePlayer.playerMove(index);
 
-      switch (activePlayer) {
-        case playerOne:
-          activePlayer = playerTwo;
-          headerText.textContent = `${activePlayer.name}'s turn`;
-          break;
-        case playerTwo:
-          activePlayer = playerOne;
-          headerText.textContent = `${activePlayer.name}'s turn`;
-          break;
-        default:
-      }
-
-      checkWin();
+      checkWinner.switchActive();
 
       renderBoard.renderFunc();
+
+      checkWinner.checkWin();
+
+      if (checkWinner.winner === '' && playerTwo.name === 'Computer') {
+        computerController.compMove();
+      }
     }
   };
 
@@ -157,19 +215,30 @@ const gameFlow = (() => {
     cell.addEventListener('click', () => {
       placeMark(index);
     });
-    return { headerText };
   });
 
   modalController.playBtn.onclick = () => {
     const inputValues = modalController.getInputValues();
     const [a, b] = inputValues;
-    if (!a) {
+    if (!a && !checkboxController.checkbox.checked) {
       modalController.playerOneInput.style.borderColor = 'red';
     }
-    if (!b) {
+    if (!b && !checkboxController.checkbox.checked) {
       modalController.playerTwoInput.style.borderColor = 'red';
+    } else if (checkboxController.checkbox.checked) {
+      modalController.hideModal();
+      modalController.playerOneInput.style.borderColor = 'gray';
+      modalController.playerTwoInput.style.borderColor = 'gray';
+      playerOne.name = a;
+      playerTwo.name = 'Computer';
+      headerText.textContent = `${activePlayer.name}'s turn`;
+      if (activePlayer.name === 'Computer') {
+        computerController.compMove();
+      }
     } else {
       modalController.hideModal();
+      modalController.playerOneInput.style.borderColor = 'gray';
+      modalController.playerTwoInput.style.borderColor = 'gray';
       playerOne.name = a;
       playerTwo.name = b;
       headerText.textContent = `${activePlayer.name}'s turn`;
@@ -184,7 +253,7 @@ const gameFlow = (() => {
       renderBoard.displayArray[i].classList.remove('playerTwo');
     }
     renderBoard.renderFunc();
-    winner = '';
+    checkWinner.resetWinner();
     chooseActive();
     playerOne.playerMoves.splice(0, playerOne.playerMoves.length);
     playerTwo.playerMoves.splice(0, playerTwo.playerMoves.length);
