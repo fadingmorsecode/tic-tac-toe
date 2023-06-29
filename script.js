@@ -39,6 +39,16 @@ const modalController = (() => {
   const playerTwoInput = document.querySelector('#playerTwoInput');
   const playerTwoLabel = document.querySelector('#player-two-label');
 
+  const hidePlayerTwo = () => {
+    playerTwoLabel.textContent = 'Computer';
+    playerTwoInput.style.visibility = 'hidden';
+  };
+
+  const showPlayerTwo = () => {
+    playerTwoLabel.textContent = 'Player Two Name';
+    playerTwoInput.style.visibility = 'visible';
+  };
+
   const getInputValues = () => [playerOneInput.value, playerTwoInput.value];
 
   const hideModal = () => {
@@ -57,6 +67,8 @@ const modalController = (() => {
     playerTwoInput,
     getInputValues,
     playerTwoLabel,
+    hidePlayerTwo,
+    showPlayerTwo,
   };
 })();
 
@@ -65,11 +77,9 @@ const checkboxController = (() => {
 
   checkbox.addEventListener('change', () => {
     if (checkbox.checked) {
-      modalController.playerTwoLabel.textContent = 'Computer';
-      modalController.playerTwoInput.style.visibility = 'hidden';
+      modalController.hidePlayerTwo();
     } else {
-      modalController.playerTwoLabel.textContent = 'Player Two Name';
-      modalController.playerTwoInput.style.visibility = 'visible';
+      modalController.showPlayerTwo();
     }
   });
   return { checkbox };
@@ -154,11 +164,13 @@ const checkWinner = (() => {
     }
   };
 
+  const getWinner = () => winner;
+
   const resetWinner = () => {
     winner = '';
   };
 
-  return { checkWin, resetWinner, switchActive, winner };
+  return { checkWin, resetWinner, switchActive, getWinner };
 })();
 
 const computerController = (() => {
@@ -195,7 +207,7 @@ const gameFlow = (() => {
   chooseActive();
 
   const placeMark = (index) => {
-    if (gameBoard.obj[index] === '' && checkWinner.winner === '') {
+    if (gameBoard.obj[index] === '' && checkWinner.getWinner() === '') {
       gameBoard.obj.splice(index, 1, `${activePlayer.symbol}`);
       activePlayer.playerMove(index);
 
@@ -205,7 +217,8 @@ const gameFlow = (() => {
 
       checkWinner.checkWin();
 
-      if (checkWinner.winner === '' && playerTwo.name === 'Computer') {
+      if (checkWinner.getWinner() === '' && playerTwo.name === 'Computer') {
+        console.log('calling');
         computerController.compMove();
       }
     }
@@ -220,11 +233,11 @@ const gameFlow = (() => {
   modalController.playBtn.onclick = () => {
     const inputValues = modalController.getInputValues();
     const [a, b] = inputValues;
-    if (!a && !checkboxController.checkbox.checked) {
+    if ((!a || !b) && !checkboxController.checkbox.checked) {
       modalController.playerOneInput.style.borderColor = 'red';
-    }
-    if (!b && !checkboxController.checkbox.checked) {
       modalController.playerTwoInput.style.borderColor = 'red';
+    } else if (!a && checkboxController.checkbox.checked) {
+      modalController.playerOneInput.style.borderColor = 'red';
     } else if (checkboxController.checkbox.checked) {
       modalController.hideModal();
       modalController.playerOneInput.style.borderColor = 'gray';
