@@ -1,5 +1,5 @@
 # Tic Tac Toe
-https://cobaltjester.github.io/tic-tac-toe/
+https://fadingmorsecode.github.io/tic-tac-toe/
 # In Action:
 <img width="923" alt="Screenshot 2023-06-28 at 4 56 47 PM" src="https://github.com/CobaltJester/tic-tac-toe/assets/106215095/09db3ccd-b1ff-48c1-928c-264e4c2bc480">
 
